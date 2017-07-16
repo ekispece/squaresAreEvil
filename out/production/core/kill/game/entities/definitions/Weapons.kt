@@ -1,6 +1,5 @@
 package kill.game.entities.definitions
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Circle
 import com.badlogic.gdx.math.Vector2
 
@@ -8,9 +7,11 @@ import com.badlogic.gdx.math.Vector2
  * Created by sergio on 7/16/17.
  */
 interface Weapon {
-    var dps : Float
+    var dmg: Float
     var damageType : WeaponDamageType
     var numProjectiles : Int
+    var baseAttackTime : Float
+    var pierceCount : Int
 
     fun attack(x: Float, y: Float, originX: Float, originY: Float)
 }
@@ -24,11 +25,12 @@ interface Melee
 interface Magic
 
 interface Projectile {
-    var dps : Float
+    var life : Int
+    var dmg: Float
     var x : Float
     var y : Float
     var direction : Vector2
     var boundingBox: Circle
     fun tick()
-    fun draw(batch: SpriteBatch)
+    fun draw()
 }

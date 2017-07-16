@@ -12,27 +12,21 @@ import kill.game.entities.definitions.Moveable
 import kill.game.entities.definitions.Weapon
 import kill.game.entities.weapons.DefaultWeapon
 import kill.game.utils.gameCamera
+import kill.game.utils.renderer
 
 /**
  * Created by sergio on 7/15/17.
  */
 
 class BoxPlayer(override var x: Float = 0f, override var y: Float = 0f, var size: Float = 0f) : Moveable() {
-    var renderer : ShapeRenderer = ShapeRenderer()
-    var projectionMatrixSet : Boolean = false
     override var moveSpeed : Float = 100f
     var weapon : Weapon = DefaultWeapon()
     var isAttacking : Boolean = false
-    val baseAttackSpeed = 1.6f
     var attackSpeed = 1f
     var lastAttackTime : Long = 0
 
-    fun draw(batch: Batch) {
+    fun draw() {
         tick()
-        if (!projectionMatrixSet) {
-            renderer.projectionMatrix = batch.projectionMatrix
-            projectionMatrixSet = true
-        }
         renderer.begin(ShapeRenderer.ShapeType.Filled)
         renderer.color = Color.BLUE
 
@@ -55,9 +49,8 @@ class BoxPlayer(override var x: Float = 0f, override var y: Float = 0f, var size
 
     fun attack(eventX: Int, eventY: Int) {
         val now = TimeUtils.nanoTime()
-        if (now - lastAttackTime < TimeUtils.millisToNanos(((baseAttackSpeed/attackSpeed) * 1000).toLong()))
+        if (now - lastAttackTime < TimeUtils.millisToNanos(((weapon.baseAttackTime/attackSpeed) * 1000).toLong()))
             return
-        attackSpeed *= 1.1f
         val clickVec : Vector3 = Vector3()
         gameCamera.unproject(clickVec.set(eventX.toFloat(), eventY.toFloat(), 0f))
         weapon.attack(clickVec.x, clickVec.y, x, y)
